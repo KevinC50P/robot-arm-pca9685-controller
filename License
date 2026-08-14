@@ -1,0 +1,49 @@
+---
+
+### 2. `robot_arm_pca9685.ino` (Arduino Source Code)
+```cpp
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
+
+// Called this way, it uses the default address 0x40
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
+#define SERVOMIN  150 // Minimum pulse length count (out of 4096)
+#define SERVOMAX  600 // Maximum pulse length count (out of 4096)
+#define USMIN     600 // Minimum microsecond width
+#define USMAX     2400 // Maximum microsecond width
+#define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
+
+const int BUTTON_PIN = 2;     // Digital pin connected to toggle button
+const int TOTAL_SERVOS = 4;   // Total number of servos connected
+
+int selectedServo = 0;
+bool lastButtonState = LOW;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(BUTTON_PIN, INPUT);
+
+  pwm.begin();
+  pwm.setOscillatorFrequency(27000000);
+  pwm.setPWMFreq(SERVO_FREQ);
+
+  delay(10);
+  Serial.println("Robot Arm Controller Initialized.");
+}
+
+void loop() {
+  bool currentButtonState = digitalRead(BUTTON_PIN);
+
+  // Single-button press detection to toggle selected servo
+  if (currentButtonState == HIGH && lastButtonState == LOW) {
+    selectedServo = (selectedServo + 1) % TOTAL_SERVOS;
+    Serial.print("Selected Servo Switched to Channel: ");
+    Serial.println(selectedServo);
+    delay(200); // Debounce delay
+  }
+  
+  lastButtonState = currentButtonState;
+
+  // Additional servo control logic goes here
+}
