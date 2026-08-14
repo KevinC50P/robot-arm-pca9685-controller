@@ -25,3 +25,8 @@ An Arduino Uno based multi-servo robot arm controller utilizing the PCA9685 16-c
 1. Clone this repository:
    ```bash
    git clone [https://github.com/](https://github.com/)<your-username>/robot-arm-pca9685-controller.git
+
+
+## Wiring Diagram
+
+![Schaltplan](wiring_diagram.png)
